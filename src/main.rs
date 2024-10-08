@@ -299,77 +299,118 @@
 // }
 
 // Define the Account trait with deposit, withdraw, and balance methods
-trait Account {
-    fn deposit(&mut self, amount: f64);
-    fn withdraw(&mut self, amount: f64);
-    fn balance(&self) -> f64;
+// trait Account {
+//     fn deposit(&mut self, amount: f64);
+//     fn withdraw(&mut self, amount: f64);
+//     fn balance(&self) -> f64;
+// }
+
+// // Define a struct called BankAccount with account_number, holder_name, and balance fields
+// struct BankAccount {
+//     account_number: u64,
+//     holder_name: String,
+//     balance: f64,
+// }
+
+// // Implement the Account trait for the BankAccount struct
+// impl Account for BankAccount {
+//     fn deposit(&mut self, amount: f64) {
+//         self.balance += amount;
+//     }
+
+//     fn withdraw(&mut self, amount: f64) {
+//         if self.balance >= amount {
+//             self.balance -= amount;
+//         } else {
+//             println!("Insufficient funds!");
+//         }
+//     }
+
+//     fn balance(&self) -> f64 {
+//         self.balance
+//     }
+// }
+
+// fn main() {
+//     // Create two BankAccount instances
+//     let mut account1 = BankAccount {
+//         account_number: 123456789,
+//         holder_name: String::from("Alice"),
+//         balance: 1000.0,
+//     };
+
+//     let mut account2 = BankAccount {
+//         account_number: 987654321,
+//         holder_name: String::from("Bob"),
+//         balance: 500.0,
+//     };
+
+//     // Deposit money into account1
+//     account1.deposit(200.0);
+//     println!(
+//         "{}'s new balance after deposit: ${}",
+//         account1.holder_name,
+//         account1.balance()
+//     );
+
+//     // Withdraw money from account2
+//     account2.withdraw(150.0);
+//     println!(
+//         "{}'s new balance after withdrawal: ${}",
+//         account2.holder_name,
+//         account2.balance()
+//     );
+
+//     // Check the balance of both accounts
+//     println!(
+//         "{}'s final balance: ${}",
+//         account1.holder_name,
+//         account1.balance()
+//     );
+//     println!(
+//         "{}'s final balance: ${}",
+//         account2.holder_name,
+//         account2.balance()
+//     );
+// }
+
+// Define the FilterCondition struct
+struct FilterCondition {
+    value: i32, // Assuming we're filtering based on an integer value
 }
 
-// Define a struct called BankAccount with account_number, holder_name, and balance fields
-struct BankAccount {
-    account_number: u64,
-    holder_name: String,
-    balance: f64,
-}
-
-// Implement the Account trait for the BankAccount struct
-impl Account for BankAccount {
-    fn deposit(&mut self, amount: f64) {
-        self.balance += amount;
+// Implement methods for the FilterCondition struct
+impl FilterCondition {
+    // Check if the item matches the filter condition
+    fn is_match(&self, item: &i32) -> bool {
+        *item == self.value // Match if the item equals the condition value
     }
+}
 
-    fn withdraw(&mut self, amount: f64) {
-        if self.balance >= amount {
-            self.balance -= amount;
-        } else {
-            println!("Insufficient funds!");
+// Custom filtering function
+fn custom_filter(collection: Vec<i32>, condition: &FilterCondition) -> Vec<i32> {
+    let mut filtered = Vec::new(); // Create a new vector to store filtered results
+
+    // Iterate over the collection and check for matches
+    for item in collection {
+        if condition.is_match(&item) {
+            filtered.push(item); // Add item to the filtered vector if it matches
         }
     }
 
-    fn balance(&self) -> f64 {
-        self.balance
-    }
+    filtered // Return the filtered collection
 }
 
 fn main() {
-    // Create two BankAccount instances
-    let mut account1 = BankAccount {
-        account_number: 123456789,
-        holder_name: String::from("Alice"),
-        balance: 1000.0,
-    };
+    // Create a collection of integers
+    let collection = vec![1, 2, 3, 4, 5, 3, 2, 1];
 
-    let mut account2 = BankAccount {
-        account_number: 987654321,
-        holder_name: String::from("Bob"),
-        balance: 500.0,
-    };
+    // Initialize a FilterCondition object with the desired value
+    let condition = FilterCondition { value: 3 };
 
-    // Deposit money into account1
-    account1.deposit(200.0);
-    println!(
-        "{}'s new balance after deposit: ${}",
-        account1.holder_name,
-        account1.balance()
-    );
+    // Call the custom_filter function
+    let filtered_result = custom_filter(collection, &condition);
 
-    // Withdraw money from account2
-    account2.withdraw(150.0);
-    println!(
-        "{}'s new balance after withdrawal: ${}",
-        account2.holder_name,
-        account2.balance()
-    );
-
-    // Check the balance of both accounts
-    println!(
-        "{}'s final balance: ${}",
-        account1.holder_name,
-        account1.balance()
-    );
-    println!(
-        "{}'s final balance: ${}",
-        account2.holder_name,
-        account2.balance()
-    );
+    // Print the filtered result
+    println!("Filtered result: {:?}", filtered_result);
 }
