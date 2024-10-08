@@ -374,43 +374,126 @@
 //     );
 // }
 
-// Define the FilterCondition struct
-struct FilterCondition {
-    value: i32, // Assuming we're filtering based on an integer value
+// // Define the FilterCondition struct
+// struct FilterCondition {
+//     value: i32, // Assuming we're filtering based on an integer value
+// }
+
+// // Implement methods for the FilterCondition struct
+// impl FilterCondition {
+//     // Check if the item matches the filter condition
+//     fn is_match(&self, item: &i32) -> bool {
+//         *item == self.value // Match if the item equals the condition value
+//     }
+// }
+
+// // Custom filtering function
+// fn custom_filter(collection: Vec<i32>, condition: &FilterCondition) -> Vec<i32> {
+//     let mut filtered = Vec::new(); // Create a new vector to store filtered results
+
+//     // Iterate over the collection and check for matches
+//     for item in collection {
+//         if condition.is_match(&item) {
+//             filtered.push(item); // Add item to the filtered vector if it matches
+//         }
+//     }
+
+//     filtered // Return the filtered collection
+// }
+
+// fn main() {
+//     // Create a collection of integers
+//     let collection = vec![1, 2, 3, 4, 5, 3, 2, 1];
+
+//     // Initialize a FilterCondition object with the desired value
+//     let condition = FilterCondition { value: 3 };
+
+//     // Call the custom_filter function
+//     let filtered_result = custom_filter(collection, &condition);
+
+//     // Print the filtered result
+//     println!("Filtered result: {:?}", filtered_result);
+// }
+
+// Define the Account trait with deposit, withdraw, and balance methods
+trait Account {
+    fn deposit(&mut self, amount: f64) -> Result<(), String>;
+    fn withdraw(&mut self, amount: f64) -> Result<(), String>;
+    fn balance(&self) -> f64;
 }
 
-// Implement methods for the FilterCondition struct
-impl FilterCondition {
-    // Check if the item matches the filter condition
-    fn is_match(&self, item: &i32) -> bool {
-        *item == self.value // Match if the item equals the condition value
-    }
+// Define a struct called BankAccount with account_number, holder_name, and balance fields
+struct BankAccount {
+    account_number: u64,
+    holder_name: String,
+    balance: f64,
 }
 
-// Custom filtering function
-fn custom_filter(collection: Vec<i32>, condition: &FilterCondition) -> Vec<i32> {
-    let mut filtered = Vec::new(); // Create a new vector to store filtered results
-
-    // Iterate over the collection and check for matches
-    for item in collection {
-        if condition.is_match(&item) {
-            filtered.push(item); // Add item to the filtered vector if it matches
+// Implement the Account trait for the BankAccount struct
+impl Account for BankAccount {
+    fn deposit(&mut self, amount: f64) -> Result<(), String> {
+        if amount > 0.0 {
+            self.balance += amount;
+            Ok(())
+        } else {
+            Err("Deposit amount must be positive.".to_string())
         }
     }
 
-    filtered // Return the filtered collection
+    fn withdraw(&mut self, amount: f64) -> Result<(), String> {
+        if amount > 0.0 && self.balance >= amount {
+            self.balance -= amount;
+            Ok(())
+        } else if amount <= 0.0 {
+            Err("Withdrawal amount must be positive.".to_string())
+        } else {
+            Err("Insufficient funds!".to_string())
+        }
+    }
+
+    fn balance(&self) -> f64 {
+        self.balance
+    }
 }
 
 fn main() {
-    // Create a collection of integers
-    let collection = vec![1, 2, 3, 4, 5, 3, 2, 1];
+    // Create two BankAccount instances
+    let mut account1 = BankAccount {
+        account_number: 123456789,
+        holder_name: String::from("Alice"),
+        balance: 1000.0,
+    };
 
-    // Initialize a FilterCondition object with the desired value
-    let condition = FilterCondition { value: 3 };
+    let mut account2 = BankAccount {
+        account_number: 987654321,
+        holder_name: String::from("Bob"),
+        balance: 500.0,
+    };
 
-    // Call the custom_filter function
-    let filtered_result = custom_filter(collection, &condition);
+    // Attempt to deposit money into account1
+    match account1.deposit(200.0) {
+        Ok(_) => println!("Deposit successful. New balance: ${}", account1.balance()),
+        Err(e) => println!("Failed to deposit: {}", e),
+    }
 
-    // Print the filtered result
-    println!("Filtered result: {:?}", filtered_result);
+    // Attempt to withdraw money from account2
+    match account2.withdraw(600.0) {
+        Ok(_) => println!(
+            "Withdrawal successful. New balance: ${}",
+            account2.balance()
+        ),
+        Err(e) => println!("Failed to withdraw: {}", e),
+    }
+
+    // Check the balance of both accounts
+    println!(
+        "{}'s final balance: ${}",
+        account1.holder_name,
+        account1.balance()
+    );
+    println!(
+        "{}'s final balance: ${}",
+        account2.holder_name,
+        account2.balance()
+    );
 }
